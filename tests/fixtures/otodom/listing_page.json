@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Product",
+      "offers": {
+        "@type": "AggregateOffer",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Test offer 1",
+            "url": "https://www.otodom.pl/pl/oferta/test-offer-1-ID4xTHE",
+            "price": 2600000,
+            "priceCurrency": "PLN",
+            "itemOffered": {
+              "@type": "Accommodation",
+              "numberOfRooms": 3,
+              "floorSize": {
+                "@type": "QuantitativeValue",
+                "value": 126.75,
+                "unitCode": "MTK"
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Ruda Śląska",
+                "addressRegion": "śląskie"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Test offer 2",
+            "url": "https://www.otodom.pl/pl/oferta/test-offer-2-ID4AIjO",
+            "price": 859000,
+            "priceCurrency": "PLN",
+            "itemOffered": {
+              "@type": "Accommodation",
+              "numberOfRooms": 3,
+              "floorSize": {
+                "@type": "QuantitativeValue",
+                "value": 60.07,
+                "unitCode": "MTK"
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Poznań",
+                "addressRegion": "wielkopolskie"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
