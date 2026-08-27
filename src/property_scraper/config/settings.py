@@ -16,7 +16,7 @@ class ScraperSettings(BaseSettings):
     request_delay: float = 3.0
     request_timeout: int = 15
     first_page_interval: int = 10
-    full_scrape_hour: int = 2
+    full_scrape_time: str = "22:00"
     user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
 
