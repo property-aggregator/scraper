@@ -46,6 +46,10 @@ class RabbitMQPublisher:
                 queue=settings.rabbitmq.queue,
                 exchange=settings.rabbitmq.exchange,
                 routing_key="offer")
+            self.channel.queue_bind(
+                queue=settings.rabbitmq.queue,
+                exchange=settings.rabbitmq.exchange,
+                routing_key="scrape_event")
 
             logger.info("Connected to RabbitMQ")
 
@@ -58,9 +62,37 @@ class RabbitMQPublisher:
             self.connection.close()
             logger.info("Disconnected from RabbitMQ")
 
+    @staticmethod
+    def validate_offer(offer: Offer) -> bool:
+        if not offer.source_id or not offer.source_url:
+            return False
+        if not offer.title or not offer.location_raw:
+            return False
+        if offer.price is None or offer.price <= 0:
+            return False
+        if offer.area_m2 is None or offer.area_m2 <= 0:
+            return False
+        if offer.rooms is None or offer.rooms <= 0:
+            return False
+        if not offer.portal or not offer.transaction_type or not offer.property_type:
+            return False
+        return True
+
     def publish_offer(self, offer: Offer):
         if not self.channel:
             self.connect()
+
+        if not self.validate_offer(offer):
+            logger.warning(
+                "Invalid offer payload: source_id=%s portal=%s title=%s price=%s area_m2=%s rooms=%s",
+                getattr(offer, "source_id", None),
+                getattr(offer, "portal", None),
+                getattr(offer, "title", None),
+                getattr(offer, "price", None),
+                getattr(offer, "area_m2", None),
+                getattr(offer, "rooms", None),
+            )
+            return
 
         message = json.dumps(offer.to_dict(), ensure_ascii=False)
 
