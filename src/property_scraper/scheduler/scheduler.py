@@ -58,11 +58,8 @@ class ScraperScheduler:
     def start(self):
         logger.info("Starting scheduler")
 
-        schedule.every(settings.scraper.first_page_interval_minutes).minutes.do(
-            self.run_first_page_scrape)
-
-        schedule.every().day.at(f"{settings.scraper.full_scrape_hour:02d}:00").do(
-            self.run_full_scrape)
+        schedule.every(settings.scraper.first_page_interval).minutes.do(self.run_first_page_scrape)
+        schedule.every().day.at(settings.scraper.full_scrape_time).do(self.run_full_scrape)
 
         self.run_first_page_scrape()
 
