@@ -78,6 +78,55 @@ Run tests:
 python -m pytest
 ```
 
+## Docker Compose
+
+Run scraper + RabbitMQ:
+
+```bash
+docker compose up -d
+```
+
+First run (or after Dockerfile changes) builds the scraper image automatically.
+
+By default, `docker compose up -d` starts scraper in `scheduler` mode.
+That means periodic scraping is executed based on:
+- `FIRST_PAGE_INTERVAL` (default `10` minutes)
+- `FULL_SCRAPE_HOUR` (default `2`, i.e. 02:00)
+
+Stop:
+
+```bash
+docker compose down
+```
+
+RabbitMQ management UI:
+
+```text
+http://localhost:15672
+```
+
+Default credentials: `guest` / `guest`.
+
+To change scraper mode (default: `scheduler`), set `SCRAPER_MODE`:
+
+- `first-page` — one-time first page scrape:
+
+```bash
+SCRAPER_MODE=first-page docker compose up scraper
+```
+
+- `full-scrape` — one-time full scrape:
+
+```bash
+SCRAPER_MODE=full-scrape docker compose up scraper
+```
+
+- `test` — one-time test mode (no RabbitMQ publish):
+
+```bash
+SCRAPER_MODE=test docker compose up scraper
+```
+
 ## Project structure
 
 ```text
