@@ -1,7 +1,7 @@
 ﻿import time
 import logging
+import random
 from abc import ABC, abstractmethod
-from random import random
 from typing import List, Generator
 from dataclasses import dataclass
 
@@ -91,6 +91,10 @@ class BaseScraper(ABC):
 
                 total_offers += len(result.offers)
                 logger.info(f"[{self.PORTAL_NAME}] Page {page}: {len(result.offers)} offers")
+
+                if not result.has_next_page and len(result.offers) >= 24:
+                    result.has_next_page = True
+                    logger.info(f"[{self.PORTAL_NAME}] Pagination signal missing, continuing because current page has {len(result.offers)} offers")
 
                 yield result.offers
 

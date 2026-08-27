@@ -25,7 +25,7 @@ class OtodomScraper(BaseScraper):
 
     def get_listing_url(self, page: int) -> str:
         base = f"{self.BASE_URL}/pl/wyniki/sprzedaz/mieszkanie,rynek-wtorny/cala-polska"
-        params = "limit=24&ownerTypeSingleSelect=ALL&by=DEFAULT&direction=DESC"
+        params = "limit=72&ownerTypeSingleSelect=ALL&by=DEFAULT&direction=DESC"
 
         if page == 1:
             return f"{base}?{params}"
@@ -186,15 +186,28 @@ class OtodomScraper(BaseScraper):
 
     def _check_next_page(self, soup: BeautifulSoup) -> bool:
         """Sprawdza czy istnieje następna strona."""
-        # Szukamy przycisku "następna strona" lub linku do następnej strony
-        next_button = soup.select_one('[aria-label="następna strona"]')
-        if next_button:
-            return not next_button.has_attr("disabled")
+        selectors = [
+            '[data-cy="search-list-pagination"]',
+            '[data-cy="pagination"]',
+            '[aria-label="następna strona"]',
+            '[aria-label="Next page"]',
+            'a[aria-label*="następna"]',
+            'a[aria-label*="next"]',
+            'button[aria-label*="następna"]',
+            'button[aria-label*="next"]',
+            'a[rel="next"]',
+        ]
 
-        # Alternatywnie sprawdzamy paginację
-        pagination = soup.select_one('[data-cy="pagination"]')
+        for selector in selectors:
+            element = soup.select_one(selector)
+            if element:
+                return True
+
+        pagination = soup.select_one('[data-cy="search-list-pagination"]')
         if pagination:
-            next_link = pagination.select_one('a[aria-label="Go to next Page"]')
-            return next_link is not None
+            text = pagination.get_text(" ", strip=True).lower()
+            if "następna" in text or "next" in text or "dalej" in text:
+                return True
 
-        return False
+        cards = soup.select('article[data-sentry-component="AdvertCard"]')
+        return len(cards) >= 20
