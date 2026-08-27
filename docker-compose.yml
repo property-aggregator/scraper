@@ -1,0 +1,44 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: property-scraper-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: property-scraper:latest
+    container_name: property-scraper-app
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_QUEUE: offers
+      RABBITMQ_EXCHANGE: property_scraper
+      REQUEST_DELAY: 3.0
+      REQUEST_TIMEOUT: 15
+      FIRST_PAGE_INTERVAL: 10
+      FULL_SCRAPE_TIME: "21:44"
+      SCRAPER_MODE: scheduler
+    command: ["sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-full-scrape}"]
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
