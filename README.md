@@ -51,7 +51,13 @@ python -m property_scraper.main scheduler
 
 ## Configuration
 
-Create a `.env` file before running the app. All variables from the example below are required.
+Set environment variables before running the app directly, or place them in `.env` when using Docker Compose. All variables from the example below are required.
+
+For Docker Compose, create `.env` from the template first:
+
+```powershell
+Copy-Item .env.example .env
+```
 
 Example:
 
@@ -67,6 +73,14 @@ REQUEST_TIMEOUT=15
 FIRST_PAGE_INTERVAL=10
 FULL_SCRAPE_TIME=02:00
 SCRAPER_MODE=scheduler
+```
+
+For local PowerShell runs, you can load values from `.env.example` into the current session:
+
+```powershell
+cd <project-root>
+. .\load-env.ps1
+python -m property_scraper.main test
 ```
 
 ## Development
