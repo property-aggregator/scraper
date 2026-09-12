@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -59,28 +61,24 @@ class ScraperSettings(BaseSettings):
 	@classmethod
 	def validate_full_scrape_time(cls, value: str) -> str:
 		parts = value.split(":")
-		if len(parts) != 2:
+		if len(parts) != 2 or any(not part.isdigit() for part in parts):
 			raise ValueError("FULL_SCRAPE_TIME must be in HH:MM format")
 
-		hour, minute = parts
-		if (
-			len(hour) != 2
-			or len(minute) != 2
-			or not hour.isdigit()
-			or not minute.isdigit()
-		):
-			raise ValueError("FULL_SCRAPE_TIME must be in HH:MM format")
-
-		if not (0 <= int(hour) <= 23 and 0 <= int(minute) <= 59):
+		hour, minute = map(int, parts)
+		if not (0 <= hour <= 23 and 0 <= minute <= 59):
 			raise ValueError("FULL_SCRAPE_TIME must be a valid 24h time (00:00-23:59)")
 
 		return value
 
 
 class Settings:
-	def __init__(self):
-		self.rabbitmq = RabbitMQSettings()
-		self.scraper = ScraperSettings()
+	@cached_property
+	def rabbitmq(self) -> RabbitMQSettings:
+		return RabbitMQSettings()
+
+	@cached_property
+	def scraper(self) -> ScraperSettings:
+		return ScraperSettings()
 
 
 settings = Settings()
