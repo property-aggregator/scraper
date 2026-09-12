@@ -3,7 +3,6 @@ import sys
 import argparse
 
 from property_scraper.scrapers.otodom_scraper import OtodomScraper
-from property_scraper.scheduler.scheduler import ScraperScheduler
 from property_scraper.publishers.rabbitmq_publisher import RabbitMQPublisher
 
 logging.basicConfig(
@@ -24,6 +23,8 @@ SCRAPERS = [
 
 
 def run_scheduler():
+    from property_scraper.scheduler.scheduler import ScraperScheduler
+
     logger.info("Starting scraper in scheduler mode")
     scheduler = ScraperScheduler(SCRAPERS)
     scheduler.start()

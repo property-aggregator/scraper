@@ -6,8 +6,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
@@ -26,18 +26,18 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
-      RABBITMQ_QUEUE: offers
-      RABBITMQ_EXCHANGE: property_scraper
-      REQUEST_DELAY: 3.0
-      REQUEST_TIMEOUT: 15
-      FIRST_PAGE_INTERVAL: 10
-      FULL_SCRAPE_TIME: "21:44"
-      SCRAPER_MODE: scheduler
-    command: ["sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-full-scrape}"]
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBITMQ_QUEUE: ${RABBITMQ_QUEUE}
+      RABBITMQ_EXCHANGE: ${RABBITMQ_EXCHANGE}
+      REQUEST_DELAY: ${REQUEST_DELAY}
+      REQUEST_TIMEOUT: ${REQUEST_TIMEOUT}
+      FIRST_PAGE_INTERVAL: ${FIRST_PAGE_INTERVAL}
+      FULL_SCRAPE_TIME: ${FULL_SCRAPE_TIME}
+      SCRAPER_MODE: ${SCRAPER_MODE:-scheduler}
+    command: ["sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-scheduler}"]
     restart: unless-stopped
 
 volumes:

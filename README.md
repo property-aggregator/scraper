@@ -51,17 +51,22 @@ python -m property_scraper.main scheduler
 
 ## Configuration
 
-Create a `.env` file or export the required environment variables before running RabbitMQ-related flows.
+Create a `.env` file before running the app. All variables from the example below are required.
 
 Example:
 
 ```bash
-export RABBITMQ_HOST=localhost
-export RABBITMQ_PORT=5672
-export RABBITMQ_USERNAME=guest
-export RABBITMQ_PASSWORD=guest
-export RABBITMQ_QUEUE=offers
-export RABBITMQ_EXCHANGE=property_scraper
+RABBITMQ_HOST=rabbitmq
+RABBITMQ_PORT=5672
+RABBITMQ_USERNAME=guest
+RABBITMQ_PASSWORD=guest
+RABBITMQ_QUEUE=offers
+RABBITMQ_EXCHANGE=property_scraper
+REQUEST_DELAY=3.0
+REQUEST_TIMEOUT=15
+FIRST_PAGE_INTERVAL=10
+FULL_SCRAPE_TIME=02:00
+SCRAPER_MODE=scheduler
 ```
 
 ## Development
@@ -87,11 +92,12 @@ docker compose up -d
 ```
 
 First run (or after Dockerfile changes) builds the scraper image automatically.
+`docker compose` uses variables from the same `.env` file.
 
 By default, `docker compose up -d` starts scraper in `scheduler` mode.
 That means periodic scraping is executed based on:
-- `FIRST_PAGE_INTERVAL` (default `10` minutes)
-- `FULL_SCRAPE_HOUR` (default `2`, i.e. 02:00)
+- `FIRST_PAGE_INTERVAL` (required, in minutes, must be > 0)
+- `FULL_SCRAPE_TIME` (required, format `HH:MM`, e.g. `02:00`)
 
 Stop:
 
