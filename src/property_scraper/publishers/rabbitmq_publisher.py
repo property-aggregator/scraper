@@ -90,8 +90,7 @@ class RabbitMQPublisher:
 				getattr(offer, "title", None),
 				getattr(offer, "price", None),
 				getattr(offer, "area_m2", None),
-				getattr(offer, "rooms", None),
-			)
+				getattr(offer, "rooms", None))
 			return
 
 		message = json.dumps(offer.to_dict(), ensure_ascii=False)
