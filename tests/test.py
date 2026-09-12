@@ -8,12 +8,12 @@ soup = BeautifulSoup(html, "html.parser")
 cards_list = soup.select_one('ul[data-sentry-component="CardsList"]')
 
 if not cards_list:
-    raise Exception("Nie znaleziono CardsList")
+	raise Exception("Nie znaleziono CardsList")
 
 items = cards_list.find_all("li", recursive=False)
 
 for li in items[2:]:
-    li.decompose()
+	li.decompose()
 
 output = f"""<!DOCTYPE html>
 <html lang="pl">
@@ -29,6 +29,6 @@ output = f"""<!DOCTYPE html>
 """
 
 with open("fixtures/otodom/cards_list_page2.html", "w", encoding="utf-8") as f:
-    f.write(output)
+	f.write(output)
 
 print("Zapisano: cards_list_page2.html")
