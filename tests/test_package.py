@@ -16,18 +16,18 @@ from property_scraper.config.settings import settings
 
 
 def test_package_version_exists():
-    assert property_scraper.__version__
+	assert property_scraper.__version__
 
 
 def test_settings_are_loaded():
-    assert settings.rabbitmq.host == "localhost"
-    assert settings.rabbitmq.port == 5672
-    assert settings.scraper.request_timeout == 15
-    assert settings.scraper.request_delay == 3.0
-    assert settings.scraper.first_page_interval == 10
-    assert settings.scraper.full_scrape_time == "22:00"
-    assert settings.scraper.user_agent.startswith("Mozilla/")
+	assert settings.rabbitmq.host == "localhost"
+	assert settings.rabbitmq.port == 5672
+	assert settings.scraper.request_timeout == 15
+	assert settings.scraper.request_delay == 3.0
+	assert settings.scraper.first_page_interval == 10
+	assert settings.scraper.full_scrape_time == "22:00"
+	assert settings.scraper.user_agent.startswith("Mozilla/")
 
 
 def test_main_module_imports():
-    import property_scraper.main  # noqa: F401
+	import property_scraper.main  # noqa: F401

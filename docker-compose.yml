@@ -9,7 +9,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -37,7 +37,7 @@ services:
       FIRST_PAGE_INTERVAL: ${FIRST_PAGE_INTERVAL}
       FULL_SCRAPE_TIME: ${FULL_SCRAPE_TIME}
       SCRAPER_MODE: ${SCRAPER_MODE:-scheduler}
-    command: ["sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-scheduler}"]
+    command: [ "sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-scheduler}" ]
     restart: unless-stopped
 
 volumes:
