@@ -17,9 +17,35 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
+## Configuration
+
+The app reads its settings from environment variables and, if present, from a `.env` file in the working directory (run from the project root). Real environment variables take precedence over `.env`. Docker Compose also reads `.env`. All variables from the example below are required, except `SCRAPER_MODE`, which is only used by Docker Compose.
+
+Create `.env` from the template first:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Example:
+
+```bash
+RABBITMQ_HOST=rabbitmq
+RABBITMQ_PORT=5672
+RABBITMQ_USERNAME=guest
+RABBITMQ_PASSWORD=guest
+RABBITMQ_QUEUE=offers
+RABBITMQ_EXCHANGE=property_scraper
+REQUEST_DELAY=3.0
+REQUEST_TIMEOUT=15
+FIRST_PAGE_INTERVAL=10
+FULL_SCRAPE_TIME=02:00
+SCRAPER_MODE=scheduler
+```
+
 ## Run modes
 
-Run these commands from the project root, not from inside `src/`.
+Run these commands from the project root, not from inside `src/`. The package must be installed first (see Installation), otherwise `python -m property_scraper.main` will not find it.
 
 ### Test mode
 Runs the scraper in a local test flow without publishing to RabbitMQ.
@@ -47,40 +73,6 @@ Runs periodic scraping tasks.
 
 ```bash
 python -m property_scraper.main scheduler
-```
-
-## Configuration
-
-Set environment variables before running the app directly, or place them in `.env` when using Docker Compose. All variables from the example below are required.
-
-For Docker Compose, create `.env` from the template first:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Example:
-
-```bash
-RABBITMQ_HOST=rabbitmq
-RABBITMQ_PORT=5672
-RABBITMQ_USERNAME=guest
-RABBITMQ_PASSWORD=guest
-RABBITMQ_QUEUE=offers
-RABBITMQ_EXCHANGE=property_scraper
-REQUEST_DELAY=3.0
-REQUEST_TIMEOUT=15
-FIRST_PAGE_INTERVAL=10
-FULL_SCRAPE_TIME=02:00
-SCRAPER_MODE=scheduler
-```
-
-For local PowerShell runs, you can load values from `.env.example` into the current session:
-
-```powershell
-cd <project-root>
-. .\load-env.ps1
-python -m property_scraper.main test
 ```
 
 ## Development
@@ -155,9 +147,10 @@ src/
     config/
     models/
     publishers/
-    schedulers/
+    scheduler/
     scrapers/
     utils/
     main.py
+    pipeline.py
     __init__.py
 ```
