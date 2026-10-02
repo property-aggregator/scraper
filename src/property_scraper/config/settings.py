@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class RabbitMQSettings(BaseSettings):
-	model_config = SettingsConfigDict(env_prefix="RABBITMQ_")
+	model_config = SettingsConfigDict(env_prefix="RABBITMQ_", env_file=".env", extra="ignore")
 
 	host: str
 	port: int
@@ -30,6 +30,8 @@ class RabbitMQSettings(BaseSettings):
 
 
 class ScraperSettings(BaseSettings):
+	model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
 	request_delay: float
 	request_timeout: int
 	first_page_interval: int
