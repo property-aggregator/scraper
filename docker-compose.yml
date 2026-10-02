@@ -26,7 +26,7 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: ${RABBITMQ_PORT}
       RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
