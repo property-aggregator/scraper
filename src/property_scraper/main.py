@@ -4,6 +4,7 @@ import argparse
 
 from property_scraper import pipeline
 from property_scraper.scrapers.otodom_scraper import OtodomScraper
+from property_scraper.scrapers.olx_scraper import OlxScraper
 
 logging.basicConfig(
 	level=logging.INFO,
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 SCRAPERS = [
 	OtodomScraper,
-	# OlxScraper,
+	OlxScraper,
 	# MorizonScraper,
 ]
 
@@ -43,7 +44,7 @@ def run_test():
 			print(f"{i}. {offer.title}")
 			print(f"   Cena: {offer.price} PLN ({offer.price_per_m2} PLN/m²)")
 			print(f"   Metraż: {offer.area_m2} m² | Pokoje: {offer.rooms} | Piętro: {offer.floor}")
-			print(f"   Lokalizacja: {offer.location_raw}")
+			print(f"   Lokalizacja: {offer.street}, {offer.district}, {offer.city}, {offer.province}")
 			print(f"   Sprzedawca: {offer.seller_type}")
 			print(f"   ID: {offer.source_id}")
 			print(f"   URL: {offer.source_url}")

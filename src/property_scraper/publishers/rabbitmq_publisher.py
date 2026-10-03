@@ -95,15 +95,16 @@ class RabbitMQPublisher:
 
 		logger.info(f"Published {len(offers)} offers")
 
-	def publish_scrape_finished(self, portal: str, scrape_type: str, total_offers: int):
+	def publish_scrape_finished(self, portal: str, scrape_type: str, total_offers: int, completed: bool = True):
 		if not self.channel:
 			self.connect()
 
 		message = json.dumps({
 			"event": "scrape_finished",
 			"portal": portal,
-			"scrape_type": scrape_type,
-			"total_offers": total_offers,
+			"scrapeType": scrape_type,
+			"totalOffers": total_offers,
+			"completed": completed,
 		}, ensure_ascii=False)
 
 		self.channel.basic_publish(

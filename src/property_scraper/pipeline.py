@@ -27,7 +27,7 @@ def run_first_page(scraper_classes: List[Type[BaseScraper]]):
 					total_offers=len(offers))
 
 		except Exception as e:
-			logger.error(f"[{scraper_class.PORTAL_NAME}] First page scrape failed: {e}")
+			logger.exception(f"[{scraper_class.PORTAL_NAME}] First page scrape failed: {e}")
 
 
 def run_full_scrape(scraper_classes: List[Type[BaseScraper]]):
@@ -39,16 +39,21 @@ def run_full_scrape(scraper_classes: List[Type[BaseScraper]]):
 			total_offers = 0
 
 			with RabbitMQPublisher() as publisher:
-				for offers_batch in scraper.scrape_all_pages():
-					publisher.publish_offers(offers_batch)
-					total_offers += len(offers_batch)
+				try:
+					for offers_batch in scraper.scrape_all_pages():
+						publisher.publish_offers(offers_batch)
+						total_offers += len(offers_batch)
+				except Exception as e:
+					logger.exception(f"[{scraper.PORTAL_NAME}] Full scrape interrupted: {e}")
 
 				publisher.publish_scrape_finished(
 					portal=scraper.PORTAL_NAME,
 					scrape_type="FULL",
-					total_offers=total_offers)
+					total_offers=total_offers,
+					completed=scraper.completed)
 
-			logger.info(f"[{scraper.PORTAL_NAME}] Total: {total_offers} offers")
+			logger.info(
+				f"[{scraper.PORTAL_NAME}] Total: {total_offers} offers (completed={scraper.completed})")
 
 		except Exception as e:
-			logger.error(f"[{scraper_class.PORTAL_NAME}] Full scrape failed: {e}")
+			logger.exception(f"[{scraper_class.PORTAL_NAME}] Full scrape failed: {e}")

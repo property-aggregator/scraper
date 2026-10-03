@@ -1,10 +1,13 @@
 from typing import Optional
 from datetime import datetime, timezone
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_camel
 
 
 class Offer(BaseModel):
+	model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
 	portal: str
 	source_id: str
 	source_url: str
@@ -16,7 +19,10 @@ class Offer(BaseModel):
 	rooms: Optional[int]
 	floor: Optional[str] = None
 
-	location_raw: str = ""
+	street: Optional[str] = None
+	district: Optional[str] = None
+	city: Optional[str] = None
+	province: Optional[str] = None
 
 	image_url: Optional[str] = None
 
@@ -32,7 +38,7 @@ class Offer(BaseModel):
 		.strftime("%Y-%m-%dT%H:%M:%SZ"))
 
 	def to_dict(self) -> dict:
-		return self.model_dump()
+		return self.model_dump(by_alias=True)
 
 	def is_publishable(self) -> bool:
 		# if not self.source_id or not self.source_url or not self.title:

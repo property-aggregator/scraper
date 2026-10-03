@@ -30,7 +30,7 @@ Copy-Item .env.example .env
 Example:
 
 ```bash
-RABBITMQ_HOST=rabbitmq
+RABBITMQ_HOST=localhost
 RABBITMQ_PORT=5672
 RABBITMQ_USERNAME=guest
 RABBITMQ_PASSWORD=guest
@@ -42,6 +42,8 @@ FIRST_PAGE_INTERVAL=10
 FULL_SCRAPE_TIME=02:00
 SCRAPER_MODE=scheduler
 ```
+
+When running with `docker compose`, `RABBITMQ_HOST` is automatically overridden with `rabbitmq`, so keep `localhost` in `.env`.
 
 ## Run modes
 
