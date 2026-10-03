@@ -1,18 +1,30 @@
-﻿import logging
+import json
+import logging
+import re
 from typing import Optional
-
-from bs4 import BeautifulSoup, Tag
 
 from property_scraper.scrapers.base_scraper import BaseScraper, ScrapeResult
 from property_scraper.models.offer import Offer
-from property_scraper.utils.parsers import (
-	parse_price,
-	parse_area,
-	parse_rooms,
-	extract_source_id,
-	clean_text)
+from property_scraper.utils.parsers import extract_source_id
 
 logger = logging.getLogger(__name__)
+
+NEXT_DATA_PATTERN = re.compile(
+	r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+	re.DOTALL)
+
+ROOMS = {
+	"ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5,
+	"SIX": 6, "SEVEN": 7, "EIGHT": 8, "NINE": 9, "TEN": 10,
+}
+
+FLOORS = {
+	"CELLAR": "suterena",
+	"GROUND": "parter",
+	"FIRST": "1", "SECOND": "2", "THIRD": "3", "FOURTH": "4", "FIFTH": "5",
+	"SIXTH": "6", "SEVENTH": "7", "EIGHTH": "8", "NINTH": "9", "TENTH": "10",
+	"ABOVE_TENTH": ">10",
+}
 
 
 class OtodomScraper(BaseScraper):
@@ -33,181 +45,127 @@ class OtodomScraper(BaseScraper):
 
 	def parse_listing_page(
 		self,
-		soup: BeautifulSoup,
+		html: str,
 		page_number: int,
 		scrape_type: str
 	) -> ScrapeResult:
 
-		offers = []
+		search_ads = self._extract_search_ads(html)
 
-		# Znajdź listę kart
-		cards_list = soup.select_one('ul[data-sentry-component="CardsList"]')
-
-		if not cards_list:
-			logger.warning("CardsList not found on page")
+		if search_ads is None:
+			logger.warning(
+				"searchAds not found in __NEXT_DATA__ on page %s (%s chars, starts with: %r)",
+				page_number, len(html), " ".join(html[:300].split())[:200])
 			return ScrapeResult(offers=[], has_next_page=False, page_number=page_number)
 
-		# Znajdź wszystkie karty ogłoszeń
-		cards = cards_list.select('article[data-sentry-component="AdvertCard"]')
+		pagination = search_ads.get("pagination") or {}
+		current_page = pagination.get("currentPage")
 
-		for position, card in enumerate(cards, start=1):
+		# Past the last page Otodom ignores the page number and serves a default page
+		if current_page is not None and current_page != page_number:
+			logger.warning(
+				"Requested page %s but portal returned page %s, treating as end of results",
+				page_number, current_page)
+			return ScrapeResult(offers=[], has_next_page=False, page_number=page_number)
+
+		offers = []
+		seen_ids = set()
+
+		for position, item in enumerate(search_ads.get("items") or [], start=1):
 			try:
-				offer = self._parse_card(card, page_number, position, scrape_type)
-				if offer:
-					offers.append(offer)
+				offer = self._parse_item(item)
 			except Exception as e:
-				logger.error(f"Error parsing card {position} on page {page_number}: {e}")
+				logger.exception(
+					f"Error parsing item {position} (slug={item.get('slug')}) on page {page_number}: {e}")
+				continue
 
-		# Sprawdź czy jest następna strona
-		has_next_page = self._check_next_page(soup)
+			if offer and offer.source_id not in seen_ids:
+				seen_ids.add(offer.source_id)
+				offers.append(offer)
+
+		total_pages = pagination.get("totalPages") or 0
 
 		return ScrapeResult(
 			offers=offers,
-			has_next_page=has_next_page,
+			has_next_page=page_number < total_pages,
 			page_number=page_number)
 
-	def _parse_card(
-		self,
-		card: Tag,
-		page_number: int,
-		position: int,
-		scrape_type: str
-	) -> Optional[Offer]:
-		"""Parsuje pojedynczą kartę ogłoszenia."""
-
-		# Link i source_id
-		link_el = card.select_one('a[data-cy="listing-item-link"]')
-		if not link_el:
+	def _extract_search_ads(self, html: str) -> Optional[dict]:
+		match = NEXT_DATA_PATTERN.search(html)
+		if not match:
 			return None
 
-		href = link_el.get("href", "")
-		source_url = f"{self.BASE_URL}{href}" if href.startswith("/") else href
-		source_id = extract_source_id(href)
+		try:
+			data = json.loads(match.group(1))
+		except json.JSONDecodeError as e:
+			logger.error(f"Invalid __NEXT_DATA__ JSON: {e}")
+			return None
+
+		return (
+			data.get("props", {})
+			.get("pageProps", {})
+			.get("data", {})
+			.get("searchAds"))
+
+	def _parse_item(self, item: dict) -> Optional[Offer]:
+		slug = item.get("slug")
+		source_id = extract_source_id(slug)
 
 		if not source_id:
+			logger.warning("Skipping item without valid slug: id=%s slug=%r", item.get("id"), slug)
 			return None
 
-		# Tytuł
-		title_el = card.select_one('[data-cy="listing-item-title"]')
-		title = clean_text(title_el.get_text()) if title_el else None
-
-		# Cena główna
-		price_el = card.select_one('[data-sentry-element="MainPrice"]')
-		price_text = price_el.get_text() if price_el else None
-		price = parse_price(price_text)
-
-		# Cena za m²
-		price_wrapper = card.select_one('[data-sentry-component="CustomizedPrice"]')
-		price_per_m2 = None
-		if price_wrapper:
-			spans = price_wrapper.select("span")
-			if len(spans) >= 2:
-				price_per_m2 = parse_price(spans[1].get_text())
-
-		# Lokalizacja
-		location_el = card.select_one('[data-sentry-component="Address"]')
-		location_raw = clean_text(location_el.get_text()) if location_el else ""
-
-		# Pierwsze zdjęcie
-		image_el = card.select_one('img[data-cy="listing-item-image-source"]')
-		image_url = image_el.get("src") if image_el else None
-
-		# Specyfikacje (pokoje, metraż, piętro)
-		specs = self._parse_specs(card)
-
-		# Typ sprzedawcy
-		seller_type = self._parse_seller_type(card)
+		price_per_m2 = self._money(item.get("pricePerSquareMeter"))
+		area = item.get("areaInSquareMeters")
+		images = item.get("images") or []
 
 		return Offer(
 			portal=self.PORTAL_NAME,
 			source_id=source_id,
-			source_url=source_url,
-			title=title or "",
-			price=price,
+			source_url=f"{self.BASE_URL}/pl/oferta/{slug}",
+			title=item.get("title") or "",
+			price=self._money(item.get("totalPrice")),
 			price_per_m2=price_per_m2,
-			area_m2=specs.get("area"),
-			rooms=specs.get("rooms"),
-			floor=specs.get("floor"),
-			location_raw=location_raw,
-			image_url=image_url,
+			area_m2=float(area) if area is not None else None,
+			rooms=ROOMS.get(item.get("roomsNumber")),
+			floor=FLOORS.get(item.get("floorNumber")),
+			**self._location(item.get("location") or {}),
+			image_url=images[0].get("large") if images else None,
 			transaction_type=self.TRANSACTION_TYPE,
 			property_type=self.PROPERTY_TYPE,
 			market_type=self.MARKET_TYPE,
-			seller_type=seller_type)
+			seller_type=self._seller_type(item))
 
-	def _parse_specs(self, card: Tag) -> dict:
-		"""Parsuje specyfikacje (pokoje, metraż, piętro) z karty."""
-		specs = {
-			"rooms": None,
-			"area": None,
-			"floor": None
+	@staticmethod
+	def _money(money: Optional[dict]) -> Optional[int]:
+		value = (money or {}).get("value")
+		return round(value) if value is not None else None
+
+	@staticmethod
+	def _location(location: dict) -> dict:
+		address = location.get("address") or {}
+		street = address.get("street") or {}
+		levels = (location.get("reverseGeocoding") or {}).get("locations") or []
+
+		street_name = " ".join(
+			part for part in (street.get("name"), street.get("number")) if part)
+		district = next(
+			(loc.get("name") for loc in levels if loc.get("locationLevel") == "district"),
+			None)
+
+		return {
+			"street": street_name or None,
+			"district": district,
+			"city": (address.get("city") or {}).get("name"),
+			"province": (address.get("province") or {}).get("name"),
 		}
 
-		# Znajdź listę specyfikacji
-		dl = card.select_one('[data-sentry-component="DescriptionList"]')
-		if not dl:
-			return specs
-
-		# Parsuj pary dt/dd
-		dts = dl.select("dt")
-		dds = dl.select("dd")
-
-		for dt, dd in zip(dts, dds):
-			label = clean_text(dt.get_text()).lower() if dt else ""
-			value_el = dd.select_one("span")
-			value = clean_text(value_el.get_text()) if value_el else ""
-
-			if "pokoi" in label or "pokoje" in label:
-				specs["rooms"] = parse_rooms(value)
-			elif "metr" in label or "m²" in value:
-				specs["area"] = parse_area(value)
-			elif "piętro" in label or "parter" in value.lower():
-				specs["floor"] = value
-
-		return specs
-
-	def _parse_seller_type(self, card: Tag) -> Optional[str]:
-		"""Parsuje typ sprzedawcy."""
-		seller_info = card.select_one('[data-sentry-component="SellerInfo"]')
-		if not seller_info:
-			return None
-
-		owner_type_el = seller_info.select_one('[data-sentry-component="ConnectedOwnerType"]')
-		if owner_type_el:
-			text = clean_text(owner_type_el.get_text()).lower()
-			if "biuro" in text:
-				return "agency"
-			elif "oferta" in text:
-				return "private"
-			elif "deweloper" in text:
-				return "developer"
-
+	@staticmethod
+	def _seller_type(item: dict) -> Optional[str]:
+		if item.get("isPrivateOwner"):
+			return "private"
+		if item.get("developmentId"):
+			return "developer"
+		if item.get("agency"):
+			return "agency"
 		return None
-
-	def _check_next_page(self, soup: BeautifulSoup) -> bool:
-		"""Sprawdza czy istnieje następna strona."""
-		selectors = [
-			'[data-cy="search-list-pagination"]',
-			'[data-cy="pagination"]',
-			'[aria-label="następna strona"]',
-			'[aria-label="Next page"]',
-			'a[aria-label*="następna"]',
-			'a[aria-label*="next"]',
-			'button[aria-label*="następna"]',
-			'button[aria-label*="next"]',
-			'a[rel="next"]',
-		]
-
-		for selector in selectors:
-			element = soup.select_one(selector)
-			if element:
-				return True
-
-		pagination = soup.select_one('[data-cy="search-list-pagination"]')
-		if pagination:
-			text = pagination.get_text(" ", strip=True).lower()
-			if "następna" in text or "next" in text or "dalej" in text:
-				return True
-
-		cards = soup.select('article[data-sentry-component="AdvertCard"]')
-		return len(cards) >= 20
