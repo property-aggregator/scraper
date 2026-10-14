@@ -149,15 +149,16 @@ class OtodomScraper(BaseScraper):
 
 		street_name = " ".join(
 			part for part in (street.get("name"), street.get("number")) if part)
-		district = next(
-			(loc.get("name") for loc in levels if loc.get("locationLevel") == "district"),
-			None)
 
+		def level_name(level: str) -> Optional[str]:
+			return next((loc.get("name") for loc in levels if loc.get("locationLevel") == level), None)
+
+		# address.city / address.province are often null, reverseGeocoding is always filled
 		return {
 			"street": street_name or None,
-			"district": district,
-			"city": (address.get("city") or {}).get("name"),
-			"province": (address.get("province") or {}).get("name"),
+			"district": level_name("district"),
+			"city": (address.get("city") or {}).get("name") or level_name("city_or_village"),
+			"province": (address.get("province") or {}).get("name") or level_name("voivodeship"),
 		}
 
 	@staticmethod

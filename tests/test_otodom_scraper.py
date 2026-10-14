@@ -56,6 +56,20 @@ def test_parses_offers_from_next_data():
 	assert private.city == "Józefosław"
 
 
+def test_city_and_province_fall_back_to_reverse_geocoding():
+	html = load_html()
+	data = json.loads(re.search(r'<script[^>]*>(.*?)</script>', html, re.DOTALL).group(1))
+	for item in data["props"]["pageProps"]["data"]["searchAds"]["items"]:
+		item["location"]["address"]["city"] = None
+		item["location"]["address"]["province"] = None
+	html = f'<script id="__NEXT_DATA__" type="application/json">{json.dumps(data)}</script>'
+
+	private, agency = OtodomScraper().parse_listing_page(html, page_number=1, scrape_type="FULL").offers
+
+	assert (private.city, private.province) == ("Józefosław", "mazowieckie")
+	assert (agency.city, agency.province) == ("Katowice", "śląskie")
+
+
 def test_last_page_has_no_next_page():
 	html = load_html().replace('"currentPage": 1', '"currentPage": 858')
 
