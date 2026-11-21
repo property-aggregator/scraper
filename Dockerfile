@@ -11,4 +11,4 @@ COPY src /app/src
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir .
 
-CMD ["python", "-m", "property_scraper.main", "scheduler"]
+CMD ["python", "-m", "property_scraper.main", "worker"]

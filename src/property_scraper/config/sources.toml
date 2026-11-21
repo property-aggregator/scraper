@@ -1,0 +1,32 @@
+# Searches the scraper runs. The file is re-read on every job run: set `enabled = false`
+# to skip a source from the next run on (no restart needed); `enabled` defaults to true.
+# Supported combinations are defined per portal (portals/<portal>/urls.py); an
+# unsupported one fails at startup.
+
+[[sources]]
+portal = "otodom"
+transaction = "sale"
+property_type = "apartment"
+market = "secondary"
+enabled = true
+
+[[sources]]
+portal = "otodom"
+transaction = "sale"
+property_type = "apartment"
+market = "primary"
+enabled = true
+
+[[sources]]
+portal = "olx"
+transaction = "sale"
+property_type = "apartment"
+market = "secondary"
+enabled = true
+
+[[sources]]
+portal = "olx"
+transaction = "sale"
+property_type = "apartment"
+market = "primary"
+enabled = true

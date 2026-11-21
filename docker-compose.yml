@@ -36,8 +36,22 @@ services:
       REQUEST_TIMEOUT: ${REQUEST_TIMEOUT}
       FIRST_PAGE_INTERVAL: ${FIRST_PAGE_INTERVAL}
       FULL_SCRAPE_TIME: ${FULL_SCRAPE_TIME}
-      SCRAPER_MODE: ${SCRAPER_MODE:-scheduler}
-    command: [ "sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-scheduler}" ]
+      REQUEST_JITTER: ${REQUEST_JITTER:-3.0}
+      LONG_PAUSE_AFTER_MIN: ${LONG_PAUSE_AFTER_MIN:-40}
+      LONG_PAUSE_AFTER_MAX: ${LONG_PAUSE_AFTER_MAX:-80}
+      LONG_PAUSE_MIN: ${LONG_PAUSE_MIN:-20}
+      LONG_PAUSE_MAX: ${LONG_PAUSE_MAX:-60}
+      SOURCE_PAUSE_MIN: ${SOURCE_PAUSE_MIN:-30}
+      SOURCE_PAUSE_MAX: ${SOURCE_PAUSE_MAX:-90}
+      FETCH_ATTEMPTS: ${FETCH_ATTEMPTS:-3}
+      PROXY_URLS: ${PROXY_URLS:-}
+      PROXY_COOLDOWN: ${PROXY_COOLDOWN:-300}
+      SCRAPER_MODE: ${SCRAPER_MODE:-worker}
+    command: [ "sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-worker}" ]
+    # To enable/disable sources without rebuilding the image (re-read on every job run):
+    # volumes:
+    #   - ./sources.toml:/app/sources.toml:ro
+    # and add SOURCES_FILE: /app/sources.toml to environment.
     restart: unless-stopped
 
 volumes:

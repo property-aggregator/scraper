@@ -1,0 +1,645 @@
+{
+ "data": [
+  {
+   "id": 1113871627,
+   "url": "https://www.olx.pl/d/oferta/apartament-92m2-dwupoziomowy-2-tarasy-gotowe-do-odbioru-CID3-ID1dnGTp.html",
+   "title": "Apartament 92m2 - dwupoziomowy +2 tarasy , gotowe do odbioru",
+   "params": [
+    {
+     "key": "price_per_m",
+     "name": "Cena za m²",
+     "type": "input",
+     "value": {
+      "key": "6489.13",
+      "label": "6489.13 zł/m²"
+     }
+    },
+    {
+     "key": "floor_select",
+     "name": "Poziom",
+     "type": "select",
+     "value": {
+      "key": "floor_2",
+      "label": "2"
+     }
+    },
+    {
+     "key": "furniture",
+     "name": "Umeblowane",
+     "type": "select",
+     "value": {
+      "key": "no",
+      "label": "Nie"
+     }
+    },
+    {
+     "key": "market",
+     "name": "Rynek",
+     "type": "select",
+     "value": {
+      "key": "primary",
+      "label": "Pierwotny"
+     }
+    },
+    {
+     "key": "price",
+     "name": "Cena",
+     "type": "price",
+     "value": {
+      "value": 597000,
+      "type": "price",
+      "arranged": false,
+      "budget": false,
+      "currency": "PLN",
+      "negotiable": false,
+      "converted_value": null,
+      "previous_value": null,
+      "converted_previous_value": null,
+      "converted_currency": null,
+      "label": "597 000 zł",
+      "previous_label": null
+     }
+    },
+    {
+     "key": "builttype",
+     "name": "Rodzaj zabudowy",
+     "type": "select",
+     "value": {
+      "key": "apartamentowiec",
+      "label": "Apartamentowiec"
+     }
+    },
+    {
+     "key": "m",
+     "name": "Powierzchnia",
+     "type": "input",
+     "value": {
+      "key": "92",
+      "label": "92 m²"
+     }
+    },
+    {
+     "key": "rooms",
+     "name": "Liczba pokoi",
+     "type": "select",
+     "value": {
+      "key": "four",
+      "label": "4 i więcej"
+     }
+    },
+    {
+     "key": "developer_url",
+     "name": "Strona dewelopera",
+     "type": "input",
+     "value": {
+      "key": "www.naturapark.com.pl",
+      "label": "www.naturapark.com.pl "
+     }
+    }
+   ],
+   "key_params": [
+    "price_per_m",
+    "m"
+   ],
+   "business": false,
+   "status": "active",
+   "location": {
+    "city": {
+     "id": 10609,
+     "name": "Łódź",
+     "normalized_name": "lodz"
+    },
+    "district": {
+     "id": 297,
+     "name": "Widzew"
+    },
+    "region": {
+     "id": 7,
+     "name": "Łódzkie",
+     "normalized_name": "lodzkie"
+    }
+   },
+   "photos": [
+    {
+     "id": 11741927133,
+     "filename": "v0pcnfr471ux1-PL",
+     "rotation": 0,
+     "width": 878,
+     "height": 699,
+     "link": "https://ireland.apollo.olxcdn.com:443/v1/files/v0pcnfr471ux1-PL/image;s={width}x{height}"
+    }
+   ],
+   "partner": null,
+   "offer_type": "offer"
+  },
+  {
+   "id": 1028343235,
+   "url": "https://www.olx.pl/d/oferta/spokoj-natura-i-nowoczesnosc-lokal-101m-we-wszewilkach-CID3-ID17AP3d.html",
+   "title": "Spokój, natura i nowoczesność – lokal 101m² we Wszewilkach",
+   "params": [
+    {
+     "key": "price_per_m",
+     "name": "Cena za m²",
+     "type": "input",
+     "value": {
+      "key": "7575.76",
+      "label": "7575.76 zł/m²"
+     }
+    },
+    {
+     "key": "furniture",
+     "name": "Umeblowane",
+     "type": "select",
+     "value": {
+      "key": "no",
+      "label": "Nie"
+     }
+    },
+    {
+     "key": "market",
+     "name": "Rynek",
+     "type": "select",
+     "value": {
+      "key": "primary",
+      "label": "Pierwotny"
+     }
+    },
+    {
+     "key": "price",
+     "name": "Cena",
+     "type": "price",
+     "value": {
+      "value": 750000,
+      "type": "arranged",
+      "arranged": true,
+      "budget": false,
+      "currency": "PLN",
+      "negotiable": true,
+      "converted_value": null,
+      "previous_value": null,
+      "converted_previous_value": null,
+      "converted_currency": null,
+      "label": "750 000 zł",
+      "previous_label": null
+     }
+    },
+    {
+     "key": "builttype",
+     "name": "Rodzaj zabudowy",
+     "type": "select",
+     "value": {
+      "key": "pozostale",
+      "label": "Pozostałe"
+     }
+    },
+    {
+     "key": "m",
+     "name": "Powierzchnia",
+     "type": "input",
+     "value": {
+      "key": "99",
+      "label": "99 m²"
+     }
+    },
+    {
+     "key": "rooms",
+     "name": "Liczba pokoi",
+     "type": "select",
+     "value": {
+      "key": "four",
+      "label": "4 i więcej"
+     }
+    }
+   ],
+   "key_params": [
+    "price_per_m",
+    "m"
+   ],
+   "business": false,
+   "status": "active",
+   "location": {
+    "city": {
+     "id": 20123,
+     "name": "Wszewilki",
+     "normalized_name": "wszewilki"
+    },
+    "region": {
+     "id": 3,
+     "name": "Dolnośląskie",
+     "normalized_name": "dolnoslaskie"
+    }
+   },
+   "photos": [
+    {
+     "id": 10707742905,
+     "filename": "zmdixf7eev5h2-PL",
+     "rotation": 0,
+     "width": 1000,
+     "height": 750,
+     "link": "https://ireland.apollo.olxcdn.com:443/v1/files/zmdixf7eev5h2-PL/image;s={width}x{height}"
+    }
+   ],
+   "partner": null,
+   "offer_type": "offer"
+  },
+  {
+   "id": 1089253524,
+   "url": "https://www.olx.pl/d/oferta/dwupoziomowe-97m2-bezczynszowe-st-deweloperski-2m-pos-w-cenie-klima-od-dewelopera-CID3-ID1bIoBe.html",
+   "title": "Dwupoziomowe 97m2 Bezczynszowe St Deweloperski 2m pos w cenie Klima od Dewelopera",
+   "params": [
+    {
+     "key": "price_per_m",
+     "name": "Cena za m²",
+     "type": "input",
+     "value": {
+      "key": "5138.5",
+      "label": "5138.5 zł/m²"
+     }
+    },
+    {
+     "key": "floor_select",
+     "name": "Poziom",
+     "type": "select",
+     "value": {
+      "key": "floor_1",
+      "label": "1"
+     }
+    },
+    {
+     "key": "furniture",
+     "name": "Umeblowane",
+     "type": "select",
+     "value": {
+      "key": "no",
+      "label": "Nie"
+     }
+    },
+    {
+     "key": "market",
+     "name": "Rynek",
+     "type": "select",
+     "value": {
+      "key": "primary",
+      "label": "Pierwotny"
+     }
+    },
+    {
+     "key": "price",
+     "name": "Cena",
+     "type": "price",
+     "value": {
+      "value": 499000,
+      "type": "price",
+      "arranged": false,
+      "budget": false,
+      "currency": "PLN",
+      "negotiable": false,
+      "converted_value": null,
+      "previous_value": null,
+      "converted_previous_value": null,
+      "converted_currency": null,
+      "label": "499 000 zł",
+      "previous_label": null
+     }
+    },
+    {
+     "key": "builttype",
+     "name": "Rodzaj zabudowy",
+     "type": "select",
+     "value": {
+      "key": "pozostale",
+      "label": "Pozostałe"
+     }
+    },
+    {
+     "key": "m",
+     "name": "Powierzchnia",
+     "type": "input",
+     "value": {
+      "key": "97.11",
+      "label": "97,11 m²"
+     }
+    },
+    {
+     "key": "rooms",
+     "name": "Liczba pokoi",
+     "type": "select",
+     "value": {
+      "key": "four",
+      "label": "4 i więcej"
+     }
+    },
+    {
+     "key": "developer_url",
+     "name": "Strona dewelopera",
+     "type": "input",
+     "value": {
+      "key": "www.fiolkowaaleja.pl",
+      "label": "www.fiolkowaaleja.pl "
+     }
+    }
+   ],
+   "key_params": [
+    "price_per_m",
+    "m"
+   ],
+   "business": true,
+   "status": "active",
+   "location": {
+    "city": {
+     "id": 15241,
+     "name": "Rzeszów",
+     "normalized_name": "rzeszow"
+    },
+    "region": {
+     "id": 17,
+     "name": "Podkarpackie",
+     "normalized_name": "podkarpackie"
+    }
+   },
+   "photos": [
+    {
+     "id": 11563206150,
+     "filename": "sjl6u5rzvw7t1-PL",
+     "rotation": 0,
+     "width": 2000,
+     "height": 1331,
+     "link": "https://ireland.apollo.olxcdn.com:443/v1/files/sjl6u5rzvw7t1-PL/image;s={width}x{height}"
+    }
+   ],
+   "partner": null,
+   "offer_type": "offer"
+  },
+  {
+   "id": 1083264426,
+   "url": "https://www.olx.pl/d/oferta/apartament-133-m2-dwupoziomowy-z-ogrodem-i-2-parkingi-w-cenie-ostatni-CID3-ID1bjgyS.html",
+   "title": "Apartament 133 m2 dwupoziomowy z ogrodem i 2 parkingi w cenie -OSTATNI",
+   "params": [
+    {
+     "key": "price_per_m",
+     "name": "Cena za m²",
+     "type": "input",
+     "value": {
+      "key": "5806.45",
+      "label": "5806.45 zł/m²"
+     }
+    },
+    {
+     "key": "floor_select",
+     "name": "Poziom",
+     "type": "select",
+     "value": {
+      "key": "floor_0",
+      "label": "Parter"
+     }
+    },
+    {
+     "key": "furniture",
+     "name": "Umeblowane",
+     "type": "select",
+     "value": {
+      "key": "no",
+      "label": "Nie"
+     }
+    },
+    {
+     "key": "market",
+     "name": "Rynek",
+     "type": "select",
+     "value": {
+      "key": "primary",
+      "label": "Pierwotny"
+     }
+    },
+    {
+     "key": "price",
+     "name": "Cena",
+     "type": "price",
+     "value": {
+      "value": 540000,
+      "type": "price",
+      "arranged": false,
+      "budget": false,
+      "currency": "PLN",
+      "negotiable": false,
+      "converted_value": null,
+      "previous_value": null,
+      "converted_previous_value": null,
+      "converted_currency": null,
+      "label": "540 000 zł",
+      "previous_label": null
+     }
+    },
+    {
+     "key": "builttype",
+     "name": "Rodzaj zabudowy",
+     "type": "select",
+     "value": {
+      "key": "pozostale",
+      "label": "Pozostałe"
+     }
+    },
+    {
+     "key": "m",
+     "name": "Powierzchnia",
+     "type": "input",
+     "value": {
+      "key": "93",
+      "label": "93 m²"
+     }
+    },
+    {
+     "key": "rooms",
+     "name": "Liczba pokoi",
+     "type": "select",
+     "value": {
+      "key": "four",
+      "label": "4 i więcej"
+     }
+    }
+   ],
+   "key_params": [
+    "price_per_m",
+    "m"
+   ],
+   "business": true,
+   "status": "active",
+   "location": {
+    "city": {
+     "id": 32399,
+     "name": "Mielec",
+     "normalized_name": "mielec"
+    },
+    "region": {
+     "id": 17,
+     "name": "Podkarpackie",
+     "normalized_name": "podkarpackie"
+    }
+   },
+   "photos": [
+    {
+     "id": 11740411820,
+     "filename": "ohp6iq22vwjw-PL",
+     "rotation": 0,
+     "width": 768,
+     "height": 1024,
+     "link": "https://ireland.apollo.olxcdn.com:443/v1/files/ohp6iq22vwjw-PL/image;s={width}x{height}"
+    }
+   ],
+   "partner": {
+    "code": "otodom_pl"
+   },
+   "offer_type": "offer"
+  },
+  {
+   "id": 1113871627,
+   "url": "https://www.olx.pl/d/oferta/apartament-92m2-dwupoziomowy-2-tarasy-gotowe-do-odbioru-CID3-ID1dnGTp.html",
+   "title": "Apartament 92m2 - dwupoziomowy +2 tarasy , gotowe do odbioru",
+   "params": [
+    {
+     "key": "price_per_m",
+     "name": "Cena za m²",
+     "type": "input",
+     "value": {
+      "key": "6489.13",
+      "label": "6489.13 zł/m²"
+     }
+    },
+    {
+     "key": "floor_select",
+     "name": "Poziom",
+     "type": "select",
+     "value": {
+      "key": "floor_2",
+      "label": "2"
+     }
+    },
+    {
+     "key": "furniture",
+     "name": "Umeblowane",
+     "type": "select",
+     "value": {
+      "key": "no",
+      "label": "Nie"
+     }
+    },
+    {
+     "key": "market",
+     "name": "Rynek",
+     "type": "select",
+     "value": {
+      "key": "primary",
+      "label": "Pierwotny"
+     }
+    },
+    {
+     "key": "price",
+     "name": "Cena",
+     "type": "price",
+     "value": {
+      "value": 597000,
+      "type": "price",
+      "arranged": false,
+      "budget": false,
+      "currency": "PLN",
+      "negotiable": false,
+      "converted_value": null,
+      "previous_value": null,
+      "converted_previous_value": null,
+      "converted_currency": null,
+      "label": "597 000 zł",
+      "previous_label": null
+     }
+    },
+    {
+     "key": "builttype",
+     "name": "Rodzaj zabudowy",
+     "type": "select",
+     "value": {
+      "key": "apartamentowiec",
+      "label": "Apartamentowiec"
+     }
+    },
+    {
+     "key": "m",
+     "name": "Powierzchnia",
+     "type": "input",
+     "value": {
+      "key": "92",
+      "label": "92 m²"
+     }
+    },
+    {
+     "key": "rooms",
+     "name": "Liczba pokoi",
+     "type": "select",
+     "value": {
+      "key": "four",
+      "label": "4 i więcej"
+     }
+    },
+    {
+     "key": "developer_url",
+     "name": "Strona dewelopera",
+     "type": "input",
+     "value": {
+      "key": "www.naturapark.com.pl",
+      "label": "www.naturapark.com.pl "
+     }
+    }
+   ],
+   "key_params": [
+    "price_per_m",
+    "m"
+   ],
+   "business": false,
+   "status": "active",
+   "location": {
+    "city": {
+     "id": 10609,
+     "name": "Łódź",
+     "normalized_name": "lodz"
+    },
+    "district": {
+     "id": 297,
+     "name": "Widzew"
+    },
+    "region": {
+     "id": 7,
+     "name": "Łódzkie",
+     "normalized_name": "lodzkie"
+    }
+   },
+   "photos": [
+    {
+     "id": 11741927133,
+     "filename": "v0pcnfr471ux1-PL",
+     "rotation": 0,
+     "width": 878,
+     "height": 699,
+     "link": "https://ireland.apollo.olxcdn.com:443/v1/files/v0pcnfr471ux1-PL/image;s={width}x{height}"
+    }
+   ],
+   "partner": null,
+   "offer_type": "offer"
+  }
+ ],
+ "metadata": {
+  "total_elements": 308,
+  "visible_total_count": 308,
+  "promoted": [
+   4
+  ]
+ },
+ "links": {
+  "self": {
+   "href": "https://www.olx.pl/api/v1/offers?offset=0&limit=50&category_id=14&sort_by=created_at%3Adesc&filter_enum_market%5B0%5D=primary&filter_float_m%3Afrom=90.01&filter_float_m%3Ato=100"
+  },
+  "next": {
+   "href": "https://www.olx.pl/api/v1/offers?offset=49&limit=50&category_id=14&sort_by=created_at%3Adesc&filter_enum_market%5B0%5D=primary&filter_float_m%3Afrom=90.01&filter_float_m%3Ato=100"
+  },
+  "first": {
+   "href": "https://www.olx.pl/api/v1/offers?offset=0&limit=50&category_id=14&sort_by=created_at%3Adesc&filter_enum_market%5B0%5D=primary&filter_float_m%3Afrom=90.01&filter_float_m%3Ato=100"
+  }
+ }
+}

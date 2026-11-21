@@ -49,34 +49,89 @@ When running with `docker compose`, `RABBITMQ_HOST` is automatically overridden 
 
 Run these commands from the project root, not from inside `src/`. The package must be installed first (see Installation), otherwise `python -m property_scraper.main` will not find it.
 
-### Test mode
-Runs the scraper in a local test flow without publishing to RabbitMQ.
-
 ```bash
-python -m property_scraper.main test
+python -m property_scraper.main <mode>
 ```
 
-### First page scrape
-Scrapes the first page and publishes results to RabbitMQ.
+| Mode | What it does |
+|---|---|
+| `worker` | `scheduler` + `verify-worker` in one process, sharing one rate limit per portal (recommended, Docker default) |
+| `scheduler` | periodic scraping only: first page every `FIRST_PAGE_INTERVAL` minutes, full scrape daily at `FULL_SCRAPE_TIME` |
+| `verify-worker` | only answers expiration checks from the backend (see [docs/expiration-check.md](docs/expiration-check.md)) |
+| `first-page` | one-time first page scrape of every enabled source (or `--source <label>`), published to RabbitMQ |
+| `full-scrape` | one-time full scrape of every enabled source (or `--source <label>`), published to RabbitMQ |
+| `test` | first page of every enabled source (or `--source <label>`), printed instead of published (no RabbitMQ) |
+| `check` | checks one offer URL like the verify worker would, e.g. `check --portal olx --url https://www.olx.pl/d/oferta/...` |
 
-```bash
-python -m property_scraper.main first-page
+`SIGTERM`/`Ctrl+C` stops the long-running modes gracefully.
+
+## What is scraped
+
+Searches are listed in [`src/property_scraper/config/sources.toml`](src/property_scraper/config/sources.toml)
+(override with `SOURCES_FILE`). Each source is a portal + transaction + property type + market:
+
+```toml
+[[sources]]
+portal = "otodom"
+transaction = "sale"
+property_type = "apartment"
+market = "primary"
+enabled = true   # optional, default true
 ```
 
-### Full scrape
-Scrapes all pages and publishes the results.
+The file is re-read on every job run: `enabled = false` skips a source from the next run on, without a restart.
+A source is identified by its label `portal/transaction/property_type/market` (e.g. `olx/sale/apartment/primary`);
+`--source <label>` runs one source by hand, also a disabled one:
 
 ```bash
-python -m property_scraper.main full-scrape
+python -m property_scraper.main full-scrape --source olx/sale/apartment/primary
 ```
 
-### Scheduler
-Runs periodic scraping tasks.
+In Docker the bundled file is part of the image; to edit it on a running container, mount your own file and point
+`SOURCES_FILE` at it (see `docker-compose.yml`).
 
-```bash
-python -m property_scraper.main scheduler
-```
+Supported combinations are defined per portal (`portals/<portal>/urls.py`); an unsupported one fails at startup.
+Currently: Otodom sale of apartments and houses (primary and secondary), OLX sale of apartments (primary and secondary).
 
+Only the data needed for an offer is downloaded: a single document per listing page, no images or scripts.
+Offers are read from the portals' embedded JSON only (no HTML markup parsing); if that JSON cannot be read,
+the error is logged ("cannot parse … JSON") and a full scrape is reported as not completed.
+
+- **Otodom:** listing pages come as JSON from the Next.js data endpoint (~6x smaller than the HTML page).
+  Its build id is only published in the HTML page, so that page is requested once at start and again only
+  after Otodom deploys a new frontend.
+- **OLX:** the JSON offers API its own frontend uses (`/api/v1/offers/`), ~12x less data than the listing page
+  with the same offers (checked: identical offer ids). Pages are followed through the response's `links.next`;
+  Otodom cross-listings and repeated promoted ads are skipped. OLX serves at most 1000 offers per query, so a full
+  scrape splits the search by area (`filter_float_m`): it starts from fixed ranges (0-25, 25.01-30, ...
+  150.01-10000 m²) and halves every range the portal reports more than 1000 offers for (`visible_total_count`).
+  For ~11k primary-market offers that is 21 ranges, found with 26 requests.
+
+Portals are scraped in parallel (one thread per portal); sources of the same portal run one after another,
+since they share the portal's rate limit.
+
+### Optional settings
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `REQUEST_JITTER` | `3.0` | random extra delay (0..jitter s) on top of `REQUEST_DELAY` between requests to the same portal |
+| `LONG_PAUSE_AFTER_MIN` / `_MAX` | `40` / `80` | after a random number of requests to a portal in this range, a long pause; `LONG_PAUSE_AFTER_MAX=0` disables it |
+| `LONG_PAUSE_MIN` / `_MAX` | `20` / `60` | length of that long pause (s, random) |
+| `SOURCE_PAUSE_MIN` / `_MAX` | `30` / `90` | random pause (s) between two sources of the same portal |
+| `FETCH_ATTEMPTS` | `3` | attempts for network errors, 429 and 5xx (honours `Retry-After`) |
+| `PROXY_URLS` | empty | comma-separated proxy URLs; rotated round-robin, a proxy blocked (403/429) by a portal is skipped for `PROXY_COOLDOWN` s |
+| `PROXY_COOLDOWN` | `300` | see above |
+| `SOURCES_FILE` | bundled | path to a custom `sources.toml` |
+
+## Extending
+
+- **New market / property type on an existing portal:** add the URL mapping in `portals/<portal>/urls.py`
+  (and parser handling if the cards differ), then a `[[sources]]` entry.
+- **New portal:** create `portals/<name>/` with a `Portal` subclass (URL ownership, scraper factory,
+  `availability_from_page`) and a `ListingScraper` (usually `PaginatedScraper` with `fetch_page`), then register
+  it in `portals/registry.py`.
+- **Proxies:** implement `net.proxy.ProxyProvider` (`acquire` / `report`) for a paid rotating service.
+- **Task queue (e.g. Celery):** jobs in `jobs/` are plain functions of `JobContext`; only `runtime/` needs to change.
 ## Development
 
 Install the dev dependencies:
@@ -102,8 +157,8 @@ docker compose up -d
 First run (or after Dockerfile changes) builds the scraper image automatically.
 `docker compose` uses variables from the same `.env` file.
 
-By default, `docker compose up -d` starts scraper in `scheduler` mode.
-That means periodic scraping is executed based on:
+By default, `docker compose up -d` starts the scraper in `worker` mode (scraping + expiration checks).
+Scraping is scheduled based on:
 - `FIRST_PAGE_INTERVAL` (required, in minutes, must be > 0)
 - `FULL_SCRAPE_TIME` (required, format `HH:MM`, e.g. `02:00`)
 
@@ -121,7 +176,7 @@ http://localhost:15672
 
 Default credentials: `guest` / `guest`.
 
-To change scraper mode (default: `scheduler`), set `SCRAPER_MODE`:
+To change scraper mode (default: `worker`), set `SCRAPER_MODE`:
 
 - `first-page` — one-time first page scrape:
 
@@ -144,15 +199,15 @@ SCRAPER_MODE=test docker compose up scraper
 ## Project structure
 
 ```text
-src/
-  property_scraper/
-    config/
-    models/
-    publishers/
-    scheduler/
-    scrapers/
-    utils/
-    main.py
-    pipeline.py
-    __init__.py
+src/property_scraper/
+  config/      settings (env), sources.toml + loader
+  domain/      Offer, SearchSpec, enums shared with the backend
+  net/         HttpClient (FetchResult instead of exceptions), per-domain RateLimiter, retries, proxies
+  portals/     Portal / ListingScraper base classes, registry
+    otodom/    urls, parser, scraper (Next.js data endpoint), portal (expiration rules)
+    olx/       urls, parser (offers API), scraper (area-range segmentation), portal (expiration rules)
+  messaging/   RabbitMQ topology, message contracts, publisher (with publisher confirms)
+  jobs/        first page / full scrape / expiration check; JobContext
+  runtime/     scheduler, verify worker
+  main.py      CLI
 ```
