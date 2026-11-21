@@ -1,0 +1,241 @@
+{
+ "pageProps": {
+  "data": {
+   "searchAds": {
+    "items": [
+     {
+      "id": 68660661,
+      "title": "budynek 15B - nowy etap | 2 pok. z balkonem",
+      "slug": "budynek-15b-nowy-etap-2-pok-z-balkonem-ID4E5M1",
+      "estate": "FLAT",
+      "developmentId": 0,
+      "developmentTitle": "",
+      "transaction": "SELL",
+      "location": {
+       "mapDetails": {
+        "radius": 0
+       },
+       "address": {
+        "street": null,
+        "city": null,
+        "province": null
+       },
+       "reverseGeocoding": {
+        "locations": [
+         {
+          "id": "wielkopolskie",
+          "locationLevel": "voivodeship",
+          "name": "wielkopolskie",
+          "fullName": "wielkopolskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "wielkopolskie/obornicki",
+          "locationLevel": "county",
+          "name": "obornicki",
+          "fullName": "obornicki, wielkopolskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "wielkopolskie/obornicki/oborniki",
+          "locationLevel": "commune",
+          "name": "Oborniki",
+          "fullName": "Oborniki, obornicki, wielkopolskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "wielkopolskie/obornicki/oborniki/bogdanowo",
+          "locationLevel": "city_or_village",
+          "name": "Bogdanowo",
+          "fullName": "Bogdanowo, Oborniki, obornicki, wielkopolskie",
+          "__typename": "BasicLocationObject"
+         }
+        ]
+       }
+      },
+      "images": [
+       {
+        "url": "https://ireland.apollo.olxcdn.com/v1/files/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmbiI6Ijl1bmtvMWJudzRnci1BUEwiLCJ3IjpbeyJmbiI6ImVudmZxcWUxYXk0azEtQVBMIiwicyI6IjE2IiwiYSI6IjAiLCJwIjoiMTAsLTEwIn1dfQ.U9xgjoNlTYd2jQwuVzH8d6qgkP3cFrdTG-1oPcjfras/image"
+       }
+      ],
+      "isPrivateOwner": false,
+      "agency": {
+       "id": 7188102,
+       "name": "BGR Deweloper",
+       "type": "AGENCY"
+      },
+      "totalPrice": {
+       "value": 334407,
+       "currency": "PLN"
+      },
+      "pricePerSquareMeter": {
+       "value": 7900,
+       "currency": "PLN"
+      },
+      "areaInSquareMeters": 42.33,
+      "roomsNumber": "TWO",
+      "floorNumber": "SECOND",
+      "terrainAreaInSquareMeters": null,
+      "isPromoted": false,
+      "hidePrice": false
+     },
+     {
+      "id": 68660642,
+      "title": "budynek 15B - nowy etap | 3 pok. z ogrodem",
+      "slug": "budynek-15b-nowy-etap-3-pok-z-ogrodem-ID4E5LI",
+      "estate": "FLAT",
+      "developmentId": 0,
+      "developmentTitle": "",
+      "transaction": "SELL",
+      "location": {
+       "mapDetails": {
+        "radius": 0
+       },
+       "address": {
+        "street": null,
+        "city": null,
+        "province": null
+       },
+       "reverseGeocoding": {
+        "locations": [
+         {
+          "id": "wielkopolskie",
+          "locationLevel": "voivodeship",
+          "name": "wielkopolskie",
+          "fullName": "wielkopolskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "wielkopolskie/obornicki",
+          "locationLevel": "county",
+          "name": "obornicki",
+          "fullName": "obornicki, wielkopolskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "wielkopolskie/obornicki/oborniki",
+          "locationLevel": "commune",
+          "name": "Oborniki",
+          "fullName": "Oborniki, obornicki, wielkopolskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "wielkopolskie/obornicki/oborniki/bogdanowo",
+          "locationLevel": "city_or_village",
+          "name": "Bogdanowo",
+          "fullName": "Bogdanowo, Oborniki, obornicki, wielkopolskie",
+          "__typename": "BasicLocationObject"
+         }
+        ]
+       }
+      },
+      "images": [
+       {
+        "url": "https://ireland.apollo.olxcdn.com/v1/files/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmbiI6InpmOXkxMzc1NjBycDItQVBMIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNiIsImEiOiIwIiwicCI6IjEwLC0xMCJ9XX0.Ger6OKo2BB9Plnqqhn1cetZx_b6gDUE9N1wSPX0_JTw/image"
+       }
+      ],
+      "isPrivateOwner": false,
+      "agency": {
+       "id": 7188102,
+       "name": "BGR Deweloper",
+       "type": "AGENCY"
+      },
+      "totalPrice": {
+       "value": 450396.3,
+       "currency": "PLN"
+      },
+      "pricePerSquareMeter": {
+       "value": 7990,
+       "currency": "PLN"
+      },
+      "areaInSquareMeters": 56.37,
+      "roomsNumber": "THREE",
+      "floorNumber": "GROUND",
+      "terrainAreaInSquareMeters": null,
+      "isPromoted": false,
+      "hidePrice": false
+     },
+     {
+      "id": 68646505,
+      "title": "Swobodna Living",
+      "slug": "swobodna-living-ID4E25H",
+      "estate": "INVESTMENT",
+      "developmentId": 0,
+      "developmentTitle": "",
+      "transaction": "SELL",
+      "location": {
+       "mapDetails": {
+        "radius": 0
+       },
+       "address": {
+        "street": {
+         "name": "ul. Swobodna",
+         "number": null
+        },
+        "city": null,
+        "province": null
+       },
+       "reverseGeocoding": {
+        "locations": [
+         {
+          "id": "dolnoslaskie",
+          "locationLevel": "voivodeship",
+          "name": "dolnośląskie",
+          "fullName": "dolnośląskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "dolnoslaskie/wroclaw/wroclaw/wroclaw",
+          "locationLevel": "city_or_village",
+          "name": "Wrocław",
+          "fullName": "Wrocław, dolnośląskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "dolnoslaskie/wroclaw/wroclaw/wroclaw/krzyki",
+          "locationLevel": "district",
+          "name": "Krzyki",
+          "fullName": "Krzyki, Wrocław, dolnośląskie",
+          "__typename": "BasicLocationObject"
+         },
+         {
+          "id": "dolnoslaskie/wroclaw/wroclaw/wroclaw/krzyki/powstancow-slaskich",
+          "locationLevel": "residential",
+          "name": "Powstańców Śląskich",
+          "fullName": "Powstańców Śląskich, Krzyki, Wrocław, dolnośląskie",
+          "__typename": "BasicLocationObject"
+         }
+        ]
+       }
+      },
+      "images": [
+       {
+        "url": "https://ireland.apollo.olxcdn.com/v1/files/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmbiI6ImxocDRna25sN2doZzItRUNPU1lTVEVNIiwidyI6W3siZm4iOiJlbnZmcXFlMWF5NGsxLUFQTCIsInMiOiIxNiIsImEiOiIwIiwicCI6IjEwLC0xMCJ9XX0.vhgefm4pZhwd9j8FVr-xVm6Ge4AMJYcqlUUY6lP7Ijg/image"
+       }
+      ],
+      "isPrivateOwner": false,
+      "agency": {
+       "id": 10556453,
+       "name": "Archicom",
+       "type": "DEVELOPER"
+      },
+      "totalPrice": null,
+      "pricePerSquareMeter": null,
+      "areaInSquareMeters": null,
+      "roomsNumber": null,
+      "floorNumber": null,
+      "terrainAreaInSquareMeters": null,
+      "isPromoted": false,
+      "hidePrice": false
+     }
+    ],
+    "pagination": {
+     "itemsPerPage": 72,
+     "totalItems": 93600,
+     "totalPages": 1300,
+     "currentPage": 1
+    }
+   }
+  }
+ }
+}
