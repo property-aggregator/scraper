@@ -47,6 +47,8 @@ services:
       PROXY_URLS: ${PROXY_URLS:-}
       PROXY_COOLDOWN: ${PROXY_COOLDOWN:-300}
       SCRAPER_MODE: ${SCRAPER_MODE:-worker}
+      # FULL_SCRAPE_TIME and log timestamps use this time zone (the image defaults to UTC)
+      TZ: ${TZ:-Europe/Warsaw}
     command: [ "sh", "-c", "python -m property_scraper.main ${SCRAPER_MODE:-worker}" ]
     # To enable/disable sources without rebuilding the image (re-read on every job run):
     # volumes:

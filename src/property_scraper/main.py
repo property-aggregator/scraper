@@ -37,6 +37,8 @@ def configure_logging() -> None:
 		level=logging.INFO,
 		format="%(asctime)s | %(levelname)-8s | %(threadName)s | %(name)s | %(message)s",
 		handlers=[logging.StreamHandler(sys.stdout)])
+	# pika logs every connect/close step at INFO; its warnings and errors are still shown.
+	logging.getLogger("pika").setLevel(logging.WARNING)
 
 
 def stop_on_signals() -> threading.Event:

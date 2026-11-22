@@ -160,7 +160,7 @@ First run (or after Dockerfile changes) builds the scraper image automatically.
 By default, `docker compose up -d` starts the scraper in `worker` mode (scraping + expiration checks).
 Scraping is scheduled based on:
 - `FIRST_PAGE_INTERVAL` (required, in minutes, must be > 0)
-- `FULL_SCRAPE_TIME` (required, format `HH:MM`, e.g. `02:00`)
+- `FULL_SCRAPE_TIME` (required, format `HH:MM`, e.g. `02:00`) in the container's time zone, `TZ` (default `Europe/Warsaw`)
 
 Stop:
 
