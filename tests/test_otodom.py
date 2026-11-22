@@ -134,6 +134,20 @@ def test_primary_market_skips_investment_cards():
 	assert all(offer.market_type == MarketType.PRIMARY for offer in offers)
 
 
+def test_image_url_from_current_format():
+	# 2026-11 format: images: [{"url": ...}] (older pages: {"medium", "large"}, see the secondary fixture)
+	offers = parse_search_page(primary_props(), page_number=1, spec=PRIMARY).offers
+
+	assert all(offer.image_url and offer.image_url.startswith("https://") for offer in offers)
+
+
+def test_missing_images_give_no_image_url():
+	props = primary_props()
+	props["data"]["searchAds"]["items"][0]["images"] = []
+
+	assert parse_search_page(props, page_number=1, spec=PRIMARY).offers[0].image_url is None
+
+
 def test_developer_agency_is_developer_seller():
 	props = primary_props()
 	props["data"]["searchAds"]["items"][0]["agency"]["type"] = "DEVELOPER"

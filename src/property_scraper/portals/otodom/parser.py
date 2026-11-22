@@ -105,7 +105,6 @@ def parse_item(item: dict, spec: SearchSpec) -> Optional[Offer]:
 		return None
 
 	area = item.get("areaInSquareMeters")
-	images = item.get("images") or []
 
 	return Offer(
 		portal=PORTAL,
@@ -118,11 +117,17 @@ def parse_item(item: dict, spec: SearchSpec) -> Optional[Offer]:
 		rooms=ROOMS.get(item.get("roomsNumber")),
 		floor=FLOORS.get(item.get("floorNumber")),
 		**_location(item.get("location") or {}),
-		image_url=images[0].get("large") if images else None,
+		image_url=_image_url(item.get("images")),
 		transaction_type=spec.transaction,
 		property_type=spec.property_type,
 		market_type=spec.market,
 		seller_type=_seller_type(item))
+
+
+def _image_url(images: Optional[list]) -> Optional[str]:
+	# Current format (2026-11): [{"url": ...}]; older pages had [{"medium": ..., "large": ...}].
+	image = (images or [None])[0] or {}
+	return image.get("url") or image.get("large") or image.get("medium") or None
 
 
 def _money(money: Optional[dict]) -> Optional[int]:
