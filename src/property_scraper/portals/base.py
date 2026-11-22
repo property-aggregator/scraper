@@ -18,6 +18,8 @@ class ListingParseError(Exception):
 class ListingPage:
 	offers: list[Offer]
 	has_next_page: bool
+	# The portal served something other than the requested page (e.g. a default page past the end)
+	unexpected_page: bool = False
 
 
 @dataclass
@@ -61,6 +63,12 @@ class PaginatedScraper(ListingScraper):
 		return offers
 
 	def scrape_all(self, report: ScrapeReport) -> Iterator[list[Offer]]:
+		"""Pages through the results until the portal reports no next page.
+
+		A page without offers to publish (e.g. only skipped investment cards, or promoted offers
+		already seen on earlier pages) does not end the scrape: only the portal's pagination does.
+		"""
+		seen_ids: set[str] = set()
 		page = 1
 		while True:
 			try:
@@ -70,14 +78,19 @@ class PaginatedScraper(ListingScraper):
 				report.errors.append(str(e))
 				return
 
-			if not result.offers:
-				logger.info("[%s] No offers on page %s, stopping", self.spec, page)
+			if result.unexpected_page:
+				# Logged by the parser; the page count the portal gave earlier was wrong, stop here
+				report.errors.append(f"page {page}: portal served an unexpected page")
 				return
 
 			report.pages += 1
-			report.offers += len(result.offers)
-			logger.info("[%s] Page %s: %s offers", self.spec, page, len(result.offers))
-			yield result.offers
+			# Promoted offers are repeated on later pages
+			offers = [offer for offer in result.offers if offer.source_id not in seen_ids]
+			seen_ids.update(offer.source_id for offer in offers)
+			logger.info("[%s] Page %s: %s offers (%s new)", self.spec, page, len(result.offers), len(offers))
+			if offers:
+				report.offers += len(offers)
+				yield offers
 
 			if not result.has_next_page:
 				logger.info("[%s] No more pages after %s", self.spec, page)

@@ -73,7 +73,7 @@ def parse_search_page(page_props: dict, page_number: int, spec: SearchSpec) -> L
 		logger.warning(
 			"[%s] Requested page %s but portal returned page %s, treating as end of results",
 			spec, page_number, current_page)
-		return ListingPage(offers=[], has_next_page=False)
+		return ListingPage(offers=[], has_next_page=False, unexpected_page=True)
 
 	offers = []
 	seen_ids = set()
