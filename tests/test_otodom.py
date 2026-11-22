@@ -190,7 +190,9 @@ def test_first_request_uses_html_then_data_endpoint():
 
 	batches = list(scraper.scrape_all(report))
 
-	assert len(batches) == 2
+	# Both pages carry the same fixture offers: page 2 is fetched, but has nothing new to publish
+	assert len(batches) == 1
+	assert report.pages == 2
 	assert report.completed is True
 	assert "/_next/data/" not in http.requests[0]
 	assert "/_next/data/build-1/" in http.requests[1]
@@ -262,3 +264,71 @@ def test_first_page_raises_on_blocked_request():
 	with pytest.raises(FetchError) as error:
 		scraper.scrape_first_page()
 	assert error.value.result.status == 403
+
+
+def props_with_items(items, current: int, total: int) -> dict:
+	props = page_props(current=current, total=total)
+	props["data"]["searchAds"]["items"] = items
+	return props
+
+
+def test_page_with_only_skipped_items_does_not_end_full_scrape():
+	flats = page_props()["data"]["searchAds"]["items"]
+	investment = next(i for i in primary_props()["data"]["searchAds"]["items"] if i["estate"] == "INVESTMENT")
+	pages = {
+		1: props_with_items(flats[:1], current=1, total=3),
+		2: props_with_items([investment], current=2, total=3),  # nothing to publish, but page 3 exists
+		3: props_with_items(flats[1:], current=3, total=3),
+	}
+
+	def responder(url):
+		number = int(url.split("page=")[1]) if "page=" in url else 1
+		return html_with(pages[number], build_id=None)
+
+	scraper, http = make_scraper(responder)
+	report = ScrapeReport(SECONDARY)
+
+	batches = list(scraper.scrape_all(report))
+
+	assert [[offer.source_id for offer in batch] for batch in batches] == [["ID4CPyc"], ["ID4CGkp"]]
+	assert len(http.requests) == 3
+	assert report.pages == 3
+	assert report.completed is True
+
+
+def test_offers_repeated_on_later_pages_are_published_once():
+	flats = page_props()["data"]["searchAds"]["items"]
+	promoted = flats[0]
+	pages = {
+		1: props_with_items(flats, current=1, total=2),
+		2: props_with_items([promoted], current=2, total=2),  # only the repeated promoted offer
+	}
+
+	def responder(url):
+		number = int(url.split("page=")[1]) if "page=" in url else 1
+		return html_with(pages[number], build_id=None)
+
+	scraper, _ = make_scraper(responder)
+	report = ScrapeReport(SECONDARY)
+
+	batches = list(scraper.scrape_all(report))
+
+	assert [len(batch) for batch in batches] == [2]
+	assert report.offers == 2
+	assert report.completed is True
+
+
+def test_unexpected_page_stops_without_completing():
+	def responder(url):
+		if "page=2" in url:
+			return html_with(page_props(current=1, total=3), build_id=None)  # served page 1 instead of 2
+		return html_with(page_props(current=1, total=3), build_id=None)
+
+	scraper, _ = make_scraper(responder)
+	report = ScrapeReport(SECONDARY)
+
+	batches = list(scraper.scrape_all(report))
+
+	assert len(batches) == 1
+	assert report.completed is False
+	assert "unexpected page" in report.errors[0]
